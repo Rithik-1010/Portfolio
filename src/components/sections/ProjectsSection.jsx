@@ -1,7 +1,7 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { ExternalLink, Image } from 'lucide-react'
-import { projects } from '../../data/projects'
 import ScrollReveal from '../ui/ScrollReveal'
 
 const statusStyles = {
@@ -213,6 +213,22 @@ function ProjectCard({ project, delay }) {
 }
 
 export default function ProjectsSection() {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/projects')
+      .then(res => res.json())
+      .then(data => {
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch projects:', err);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <section
       id="projects"
@@ -250,17 +266,23 @@ export default function ProjectsSection() {
         </div>
       </ScrollReveal>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '24px',
-        }}
-      >
-        {projects.map((project, i) => (
-          <ProjectCard key={project.id} project={project} delay={i * 0.12} />
-        ))}
-      </div>
+      {loading ? (
+        <div style={{ textAlign: 'center', color: '#fff', fontSize: '1.2rem', fontFamily: "'Space Mono', monospace" }}>
+          Loading projects...
+        </div>
+      ) : (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '24px',
+          }}
+        >
+          {projects.map((project, i) => (
+            <ProjectCard key={project._id || project.id} project={project} delay={i * 0.12} />
+          ))}
+        </div>
+      )}
     </section>
   )
 }
