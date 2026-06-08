@@ -21,8 +21,8 @@ const socialLinks = [
   {
     label: 'Gmail',
     icon: Mail,
-    url: 'mailto:rithik@gmail.com',
-    handle: 'rithik@gmail.com',
+    url: 'mailto:rithiks1100@gmail.com',
+    handle: 'rithiks1100@gmail.com',
     color: '#f87171',
   },
 ]
